@@ -7,7 +7,7 @@
 //
 
 #import "YYModelDemo.h"
-#import <NSObject+YYModel.h>
+#import "NSObject+YYModel.h"
 #import "JSScore.h"
 #import "JSStudent.h"
 

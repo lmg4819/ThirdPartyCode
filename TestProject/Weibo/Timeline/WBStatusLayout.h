@@ -6,7 +6,7 @@
 //  Copyright © 2018年 lmg. All rights reserved.
 //
 
-#import <YYKit.h>
+#import <YYKit/YYKit.h>
 #import "WBModel.h"
 #import "WBStatusHelper.h"
 

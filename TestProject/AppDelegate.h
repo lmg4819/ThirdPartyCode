@@ -12,7 +12,12 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-
+/*
+ http://192.168.100.123:8009/ReportH5/index?Code=M180517092908001&platForm=0
+ http://openapi.test.268v.com/ReportView/18/0607/M180607182545001.html?t=-1535014040751
+ http://openapi.test.268v.com/ReportView/18/0604/M180604152045001.html?t=-1535014059035
+ 
+ */
 @end
 
 /*

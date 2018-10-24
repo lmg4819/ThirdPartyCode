@@ -13,7 +13,9 @@ typedef void (^FailBlock)(NSString *errorStr);
 
 @interface ViewController : UIViewController
 
+/*
 
+ */
 @end
 /*
  
@@ -38,78 +40,7 @@ typedef void (^FailBlock)(NSString *errorStr);
 
 
 /*
- 
- 
- //MGMS header 27
- {
- "Accept-Encoding" = gzip;
- al = "";
- e = 0;
- dn = iPhone;
- clienttype = 1;
- at = app;
- imei = "FDE9D5AD-9849-4A73-96F0-9CF6818E99BC";
- version = "1.0";
- z = 0;
- ip = "fe80::e49d:fadc:ba36:4ed4";
- ll = "";
- n = 2;
- os = iOS;
- ow = 0;
- p = 4;
- pm = "iPhone 6 Plus";
- s = AppStore;
- sc = "414*736";
- sv = "11.4";
- 
- app = 1;
- businessid = 69012;
- memberCode = 69012;
- memberTel = 13211111111;
- onlineid = "";
- shopMemberCode = US033326;
- tid = "FDE9D5AD-9849-4A73-96F0-9CF6818E99BC1533784416225";
- username = "%E9%BB%84%E6%B5%B7%E5%8B%87";
- 
- }
 
- 
- //精估棒 header 28
- {
- "Accept-Encoding" = gzip;
- al = "";
- e = 0;
- dn = iPhone;
- clienttype = 1;
- at = app;
- imei = "FDE9D5AD-9849-4A73-96F0-9CF6818E99BC";
- version = "1.4.3";
- z = 0;
- ip = "fe80::e49d:fadc:ba36:4ed4";
- ll = "116.406318,40.004957";
- n = 2;
- os = iOS;
- ow = 0;
- p = 4;
- pm = "iPhone 6 Plus";
- s = AppStore;
- sc = "414*736";
- sv = "11.4";
- 
- 
- app = 80;
- businessid = 147910;
- memberCode = US033635;
- memberTel = 13716459804;
- onlineid = "d7c534e4-0c26-4d34-98d8-efbf0bc94a9d";
- shopMemberCode = US033635;
- tid = "FDE9D5AD-9849-4A73-96F0-9CF6818E99BC1533533996558";
- username = jgb1;
- 
- 
- ClientID = 87e70b55e5af591769072bc216d840d9;
-
- }
 
  
  

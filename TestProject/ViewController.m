@@ -8,89 +8,144 @@
 
 #import "ViewController.h"
 #import "SVProgressHUD.h"
-#import <KVOController.h>
+#import <KVOController/KVOController.h>
 #import "UIView+MJExtension.h"
 #import <pthread.h>
-#import <YYCache.h>
-#import <YYMemoryCache.h>
-#import <YYDiskCache.h>
+#import <YYKit/YYKit.h>
+#import <YYKit/YYMemoryCache.h>
+#import <YYKit/YYDiskCache.h>
 #import "WBModel.h"
 #import "AFNetworkingDemo.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-#import <AFNetworking.h>
+#import <UIView+WebCache.h>
+#import <AFNetworking/AFNetworking.h>
 
-
-
+#import <pthread.h>
+#import "FinancyContext.h"
+#import "AliPayFinancyStartegy.h"
+#import "YouLiFinancyStrategy.h"
+#import "JSCombination.h"
+#import "JSCommonTool.h"
+#import "MJRefresh.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) NSArray *dataList;
 
+@property (nonatomic,strong) dispatch_queue_t serialQueue;
+@property (nonatomic,strong) dispatch_queue_t concurrentQueue;
+
+@property (nonatomic,strong) NSMutableArray *sourceArray;
+
+
+@property (nonatomic,strong) dispatch_semaphore_t semaphore;
+
+@property (nonatomic,copy) NSString *userName;
+
 @end
 
 @implementation ViewController
--(void)testDelay:(NSString *)str{
-    NSLog(@"88888=====%@",str);
+
+__weak NSString *weakString = nil;
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    NSLog(@"%s----%@",__func__,weakString);
 }
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+     NSLog(@"%s----%@",__func__,weakString);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     // Do any additional setup after loading the view, typically from a nib.
+    
+
+
+    
+
+//    JSCombination *combination = [[JSCombination alloc]init];
+//
+//    [combination performSelector:@selector(test)];
+//    if ([combination class] == [JSCombination class]) {
+//        NSLog(@"555555555555555555");
+//    }
+//
+//    if ([combination isKindOfClass:[JSCommonTool class]]) {
+//        NSLog(@"333333333333333333");
+//    }
+    
+   // NSLog(@"%@============%d",[[JSCombination alloc] class],[[JSCombination alloc] isMemberOfClass:[JSCommonTool class]]);
+    
+//    NSString *tempStr = [NSString stringWithFormat:@"hello"];
+//    weakString = tempStr;
+//    NSLog(@"%s----%@",__func__,weakString);
+//
+//
     self.title = @"Three Party";
-    self.dataList = @[@"SVProgressHUDDemo",@"YYModelDemo",@"WBStatusTimeLineViewController",@"AFNetworkingDemo"];
-    // self.navigationController.navigationBar.hidden = YES;
-    
-    
-    //    [self performSelector:@selector(testDelay:) withObject:@"hello" afterDelay:5];
-    //    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(testDelay:) object:@"hello"];
-    
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 100, 100, 100)];
-//    [imageView sd_setImageWithURL:[NSURL URLWithString:@"http://i.test.268v.com/small/c/1805/17/20180517093434-hxpjq4wee5k.jpg?w=500"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-//        if (error) {
-//            NSLog(@"%@---",error);
-//        }else
-//        {
-//            NSLog(@"===");
-//        }
-//    }];
-   
-    
-    
-    [self.view addSubview:imageView];
+    self.dataList = @[@"SVProgressHUDDemo",@"YYModelDemo",@"WBStatusTimeLineViewController",@"AFNetworkingDemo",@"AdapterDemo",@"MGMSViewController"];
+//
+//
+//
+//    id<FinancyStartegyProtocal> aliPayFinancy = [AliPayFinancyStartegy new];
+//    FinancyContext *context = [[FinancyContext alloc]initWithFinancy:aliPayFinancy];
+//    NSInteger money = [context financyWithMonth:6 money:10000];
+//    NSLog(@"Alipay money = %@", @(money));
+//
+//
+//    id<FinancyStartegyProtocal> youLiFinancy = [YouLiFinancyStrategy new];
+//    context.financy = youLiFinancy;
+//    money = [context financyWithMonth:6 money:10000];
+//    NSLog(@"YouLi money = %@", @(money));
+//
+//
+//
 
     
     
-    YYCache *yyCache = [YYCache cacheWithName:@"LCJCache"];
+ /*
+  同步：不创建新线程
+  
+  异步：创建一条或者多条线程
+  
+  
+  串行队列：不创建或者创建一条新线程
+  主队列：  只有一条线程（主线程）
+  
+  并行队列：创建一条或者多条线程
+  全局队列：创建一条或者多条线程
+  
+  同步+串行 不创建新线程
+  同步+并行 不创建新线程
+  
+  异步+串行 创建一条新线程
+  异步+并行 
+  
+  */
     
-    [yyCache.memoryCache setCountLimit:50];
-    [yyCache.memoryCache setCostLimit:100*1024];
     
-    [yyCache.diskCache setCountLimit:50];
-    [yyCache.diskCache setCostLimit:100*1024];
-    [yyCache.diskCache setAutoTrimInterval:60];//default
-    
-    WBStatus *status = [WBStatus new];
-    status.idstr = @"123456";
-    status.mid = @"123";
-    status.rid = @"456";
-    [yyCache setObject:status forKey:@"WBStatus" withBlock:^{
-        NSLog(@"finished----finished");
+    __weak typeof(self) weakSelf = self;
+    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf.tableView.mj_footer endRefreshing];
+            [weakSelf.tableView reloadData];
+        });
     }];
     
+    [self.view addSubview:self.tableView];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        id obj = [yyCache.diskCache objectForKey:@"WBStatus"];
-        NSLog(@"%@",((WBStatus *)obj).description);
-    });
     
-  // [self.view addSubview:self.tableView];
 }
 
 #pragma mark -UITableViewDelegate,UITableViewDataSource
 -(UITableView *)tableView
 {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.mj_w, self.view.mj_h-64)];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 44, self.view.mj_w, self.view.mj_h-44-34)];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.tableFooterView = [UIView new];
@@ -118,34 +173,8 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *classString = self.dataList[indexPath.row];
-    if (indexPath.row <= 2) {
-        UIViewController *vc = [NSClassFromString(classString) new];
-        [self.navigationController pushViewController:vc animated:YES];
-    }else
-    {
-        
-        [AFNetworkingDemo downloadImage];
-        
-//        NSString *reportCode = @"J180731111830001";
-//        NSString *evaluationNo = @"EDS120180731111445964211";
-//
-//        [AFNetworkingDemo requestGarageInfo:reportCode andEvaluationNo:evaluationNo successData:^(id model, NSInteger resultCode, NSString *stateDescription) {
-//            if (resultCode == 0) {
-//                NSDictionary *dict = (NSDictionary *)model;
-//                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"提示" message:dict.description delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-//                [alert show];
-//
-//            }
-//        } FaillError:^(NSString *errorStr) {
-//            if (errorStr) {
-//                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"提示" message:errorStr delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-//                [alert show];
-//            }
-//        }];
-    }
-    
-    
-    
+    UIViewController *vc = [NSClassFromString(classString) new];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 

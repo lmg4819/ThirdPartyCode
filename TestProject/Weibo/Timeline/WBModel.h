@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <NSObject+YYModel.h>
+//#import "NSObject+YYModel.h"
+#import <YYKit/NSObject+YYModel.h>
 
 /// 认证方式
 typedef NS_ENUM(NSUInteger,WBUserVerifyType) {

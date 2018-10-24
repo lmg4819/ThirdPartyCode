@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <NSObject+YYModel.h>
+#import "NSObject+YYModel.h"
 
 @class JSScore;
 

@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "WBStatusTimeLineViewController.h"
+#import "SDImageCache.h"
 
 @interface AppDelegate ()
 
@@ -19,10 +20,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    UIEdgeInsets safeAreaInsets = self.window.safeAreaInsets;
-    NSLog(@"%@",NSStringFromUIEdgeInsets(safeAreaInsets));
-    
-    
+
     
 //    WBStatusTimeLineViewController *vc = [[WBStatusTimeLineViewController alloc]init];
 //    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
@@ -30,6 +28,13 @@
 //    self.window.rootViewController = nav;
 //    [self.window makeKeyAndVisible];
     return YES;
+}
+
+-(void)applicationDidEnterBackground:(UIApplication *)application
+{
+    [[SDImageCache sharedImageCache] clearDiskOnCompletion:^{
+        NSLog(@"-------Completion--------");
+    }];
 }
 /*
  静态库：.a 链接时会被完整的复制到可执行文件中去，程序的二进制可执行文件含有这份静态库的代码

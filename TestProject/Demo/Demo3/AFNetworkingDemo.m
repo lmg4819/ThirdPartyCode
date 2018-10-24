@@ -32,41 +32,7 @@
         NSLog(@"---=%@=---",image);
     }];
     [dataTask resume];
-    
-//    NSURLSessionDownloadTask *downloadTask =  [manager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
-//        NSLog(@"%f",downloadProgress.fractionCompleted);
-//    } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-//        NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
-//        NSString *destination = [cachePath stringByAppendingPathComponent:response.suggestedFilename];
-//        return [NSURL URLWithString:destination];
-//    } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-//        UIImage *image = [UIImage imageWithContentsOfFile:filePath.absoluteString];
-//                if (error) {
-//                    NSLog(@"下载失败----%@",error.description);
-//                }else
-//                {
-//                    NSLog(@"下载成功");
-//                }
-//    }];
-//    [downloadTask resume];
 
-//    JSNetworking *manager = [JSNetworking sharedInstance];
-//    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:@"http://i.test.268v.com/small/c/1805/17/20180517093434-hxpjq4wee5k.jpg?w=500"]];
-//   NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:^(NSProgress *downloadProgress) {
-//        NSLog(@"%f",downloadProgress.fractionCompleted);
-//    } destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-//        NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
-//        NSString *destination = [cachePath stringByAppendingPathComponent:response.suggestedFilename];
-//        return [NSURL URLWithString:destination];
-//    } completionHandler:^(NSURLResponse *response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-//        if (error) {
-//            NSLog(@"下载失败----%@",error.description);
-//        }else
-//        {
-//            NSLog(@"下载成功");
-//        }
-//    }];
-//    [downloadTask resume];
 }
 +(void)requestGarageInfo:(NSString *)productCode andEvaluationNo:(NSString *)EvaluationNo successData:(SuccessBlock)successData FaillError:(FailBlock)FaillData
 {
