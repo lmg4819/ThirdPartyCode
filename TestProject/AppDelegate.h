@@ -11,14 +11,23 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@end
 
 /*
- http://192.168.100.123:8009/ReportH5/index?Code=M180517092908001&platForm=0
- http://openapi.test.268v.com/ReportView/18/0607/M180607182545001.html?t=-1535014040751
- http://openapi.test.268v.com/ReportView/18/0604/M180604152045001.html?t=-1535014059035
+ OC可执行程序是由代码，初始化和未初始化的程序数据，链接信息，重定向信息，局部数据和动态数据构成的。程序数据包括以静态方式声明的变量和程序常量。
+ 可执行代码，程序数据以及链接和重定向信息会以静态方式被分配内存，并在程序的声明周期中一直存在。
+ 
+ 
+ 
  
  */
-@end
+
+
+
+
+
+
+
 
 /*
  视图层次关系

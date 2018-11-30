@@ -7,26 +7,13 @@
 //
 
 #import "ViewController.h"
-#import "SVProgressHUD.h"
-#import <KVOController/KVOController.h>
+#import "JSProgressView.h"
+#import "JSProgressViewConfig.h"
 #import "UIView+MJExtension.h"
-#import <pthread.h>
-#import <YYKit/YYKit.h>
-#import <YYKit/YYMemoryCache.h>
-#import <YYKit/YYDiskCache.h>
-#import "WBModel.h"
-#import "AFNetworkingDemo.h"
-#import <SDWebImage/UIImageView+WebCache.h>
-#import <UIView+WebCache.h>
-#import <AFNetworking/AFNetworking.h>
+#import "NSData+YYAdd.h"
+#import "NSString+YYAdd.h"
+#import "UIApplication+JSCategory.h"
 
-#import <pthread.h>
-#import "FinancyContext.h"
-#import "AliPayFinancyStartegy.h"
-#import "YouLiFinancyStrategy.h"
-#import "JSCombination.h"
-#import "JSCommonTool.h"
-#import "MJRefresh.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong) UITableView *tableView;
@@ -42,103 +29,42 @@
 
 @property (nonatomic,copy) NSString *userName;
 
+@property (nonatomic ,weak) UIButton *agreeButton;
+
 @end
 
 @implementation ViewController
 
-__weak NSString *weakString = nil;
--(void)viewWillAppear:(BOOL)animated
+- (void)agreeMethod:(UIButton *)sender
 {
-    [super viewWillAppear:animated];
-    NSLog(@"%s----%@",__func__,weakString);
+    [JSProgressView showHUD];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [JSProgressView dismiss];
+    });
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-     NSLog(@"%s----%@",__func__,weakString);
++ (void)show{
+
+    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Do any additional setup after loading the view, typically from a nib.
+    [[UIApplication sharedApplication] js_beganNetworkActivity];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[UIApplication sharedApplication] js_endedNetworkActivity];
+    });
     
-
-
-    
-
-//    JSCombination *combination = [[JSCombination alloc]init];
-//
-//    [combination performSelector:@selector(test)];
-//    if ([combination class] == [JSCombination class]) {
-//        NSLog(@"555555555555555555");
-//    }
-//
-//    if ([combination isKindOfClass:[JSCommonTool class]]) {
-//        NSLog(@"333333333333333333");
-//    }
-    
-   // NSLog(@"%@============%d",[[JSCombination alloc] class],[[JSCombination alloc] isMemberOfClass:[JSCommonTool class]]);
-    
-//    NSString *tempStr = [NSString stringWithFormat:@"hello"];
-//    weakString = tempStr;
-//    NSLog(@"%s----%@",__func__,weakString);
-//
-//
-    self.title = @"Three Party";
-    self.dataList = @[@"SVProgressHUDDemo",@"YYModelDemo",@"WBStatusTimeLineViewController",@"AFNetworkingDemo",@"AdapterDemo",@"MGMSViewController"];
-//
-//
-//
-//    id<FinancyStartegyProtocal> aliPayFinancy = [AliPayFinancyStartegy new];
-//    FinancyContext *context = [[FinancyContext alloc]initWithFinancy:aliPayFinancy];
-//    NSInteger money = [context financyWithMonth:6 money:10000];
-//    NSLog(@"Alipay money = %@", @(money));
-//
-//
-//    id<FinancyStartegyProtocal> youLiFinancy = [YouLiFinancyStrategy new];
-//    context.financy = youLiFinancy;
-//    money = [context financyWithMonth:6 money:10000];
-//    NSLog(@"YouLi money = %@", @(money));
-//
-//
-//
-
+    NSString *string = @"helloWorld";
+    NSString *base64String = string.base64EncodedString;
+    NSString *originalString = [NSString stringWithBase64EncodedString:base64String];
+    NSData *data = string.dataValue;
     
     
- /*
-  同步：不创建新线程
-  
-  异步：创建一条或者多条线程
-  
-  
-  串行队列：不创建或者创建一条新线程
-  主队列：  只有一条线程（主线程）
-  
-  并行队列：创建一条或者多条线程
-  全局队列：创建一条或者多条线程
-  
-  同步+串行 不创建新线程
-  同步+并行 不创建新线程
-  
-  异步+串行 创建一条新线程
-  异步+并行 
-  
-  */
-    
-    
-    __weak typeof(self) weakSelf = self;
-    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [weakSelf.tableView.mj_footer endRefreshing];
-            [weakSelf.tableView reloadData];
-        });
-    }];
-    
+    self.dataList = @[@"show",@"showImage",@"showStatus",@"showHUDWithStatus",@"showImageWithStatus",@"dismiss",@"showHUDWithDuration",@"showWithStatusDuration",@"showWithImageDuration",@"showHUDWithStatusDuration",@"showWithImageDuration"];
     [self.view addSubview:self.tableView];
-    
-    
+
 }
 
 #pragma mark -UITableViewDelegate,UITableViewDataSource
@@ -170,13 +96,41 @@ __weak NSString *weakString = nil;
     cell.textLabel.text = self.dataList[indexPath.row];
     return cell;
 }
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *classString = self.dataList[indexPath.row];
-    UIViewController *vc = [NSClassFromString(classString) new];
-    [self.navigationController pushViewController:vc animated:YES];
-}
+    if (indexPath.row == 0) {
+        JSProgressViewConfig *config = [JSProgressViewConfig defaultConfig];
+        config.foregroundColor = [UIColor whiteColor];
+        config.defaultAnimationStyle = JSProgressHUDAnimationStyleNative;
+        config.backgroundColor = [UIColor colorWithWhite:0.3 alpha:1.0];
+        [JSProgressView setCustomConfig:config];
+        [JSProgressView showHUD];
 
+        
+        [JSProgressView cleanCustomConfig];
+    }else if (indexPath.row == 1){
+        [JSProgressView showWithImage:[UIImage imageNamed:@"Checkmark"]];
+    }else if (indexPath.row == 2){
+        [JSProgressView showWithStatus:@"欢迎光临"];
+    }else if (indexPath.row == 3){
+        [JSProgressView showHUDWithStatus:@"欢迎光临"];
+    }else if (indexPath.row == 4){
+        [JSProgressView showWithImage:[UIImage imageNamed:@"Checkmark"] status:@"欢迎光临"];
+    }else if(indexPath.row == 5){
+        [JSProgressView dismiss];
+    }else if (indexPath.row == 6){
+        [JSProgressView showHUDWithDuration:2.0];
+    }else if (indexPath.row == 7){
+        [JSProgressView showWithStatus:@"欢迎光临" duration:2.0];
+    }else if (indexPath.row == 8){
+        [JSProgressView showWithImage:[UIImage imageNamed:@"Checkmark"] duration:2.0];
+    }else if (indexPath.row == 9){
+        [JSProgressView showHUDWithStatus:@"欢迎光临" duration:2.0];
+    }else if (indexPath.row == 10){
+        [JSProgressView showWithImage:[UIImage imageNamed:@"Checkmark"] status:@"欢迎光临" duration:2.0];
+    }
+}
 
 
 @end
